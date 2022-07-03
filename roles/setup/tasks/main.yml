@@ -1,0 +1,52 @@
+---
+- name: "update apt packages."
+  become: yes
+  apt:
+    update_cache: yes
+
+- name: "upgrade packages"
+  become: yes
+  apt:
+    upgrade: yes
+
+- name: " install Nodejs "
+  become: true
+  apt: 
+    name: ["nodejs"]
+    state: latest
+    update_cache : yes
+
+- name: " install  NPM"
+  become: true
+  apt: 
+    name: ["npm"]
+    state: latest
+    update_cache : yes
+
+- name: "install pm2"
+  become: yes
+  npm:
+    name: pm2
+    global: yes
+    production: yes
+    state: present
+
+- name: "remove dependencies that are not required"
+  become: true
+  apt:
+    autoremove: yes
+
+- name: create web directory 
+  file:
+      path: ~/web
+      state: directory
+      
+- name: "copy JS index file into server"
+  copy:
+    src: index.js # this possible with out absolute path because it stored in the files (roles) folder
+    dest: ~/web/index.js
+    backup: yes
+
+- name: start pm2 process
+  shell: |
+    pm2 start ~/web/index.js -f

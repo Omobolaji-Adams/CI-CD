@@ -17,18 +17,18 @@ commands:
             aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
           
 jobs:
-  #say-hello:
+  say-hello:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-   # docker:
-    #  - image: cimg/base:stable
+    docker:
+      - image: cimg/base:stable
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-    #steps:
-     # - checkout
-      #- run:
-       #   name: "Say hello"
-        #  command: "echo Hello, World!"
+    steps:
+      - checkout
+      - run:
+          name: "Say hello"
+          command: "echo Hello, World!"
 
   create_infrastructure: 
     docker:
@@ -44,25 +44,25 @@ jobs:
               --region us-east-1
       # Fail the job intentionally to simulate an error.
       # Uncomment the line below if you want to fail the current step
-      - run: return 1
-      - destroy_environment
+      #- run: return 1
+      #- destroy_environment
 
- # configure_infrastructure: 
-  #  docker:
-   #   - image: python:3.7-alpine3.11
-    #steps:
-     # - checkout
-      #- add_ssh_keys:
-       #   fingerprints: ["34:84:22:7e:54:2c:dd:49:c3:03:75:d3:30:19:b2:f3"] # You can get this ID in the section where you registered the SSH Key
-      #- run:
-       #   name: Install dependencies
-        #  command: |
-            # install the dependencies needed for your playbook
-         #   apk add --update ansible 
-      #- run:
-       #   name: Configure server
-        #  command: |
-          #  ansible-playbook -i inventory main.yml
+  configure_infrastructure: 
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["34:84:22:7e:54:2c:dd:49:c3:03:75:d3:30:19:b2:f3"] # You can get this ID in the section where you registered the SSH Key
+      - run:
+          name: Install dependencies
+          command: |
+            install the dependencies needed for your playbook
+            apk add --update ansible 
+      - run:
+          name: Configure server
+          command: |
+            ansible-playbook -i inventory main.yml
             
                        
   smoke_test:
@@ -87,10 +87,10 @@ jobs:
 workflows:
   say-hello-workflow:
     jobs:
-      #- say-hello
+      - say-hello
       - create_infrastructure
-     # - configure_infrastructure
+      - configure_infrastructure
       - smoke_test
-         # requires:
-          #  - create_infrastructure
+          requires:
+            - configure_infrastructure
             

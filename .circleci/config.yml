@@ -81,18 +81,20 @@ jobs:
             else
               return 1
             fi
+      - destroy_environment
+        when: on_fail
             
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   say-hello-workflow:
     jobs:
-      - say-hello
-      - create_infrastructure
-      - configure_infrastructure:
-          requires:
-            - create_infrastructure
+      #- say-hello
+      #- create_infrastructure
+      #- configure_infrastructure:
+         # requires:
+           # - create_infrastructure
       - smoke_test:
-          requires:
-            - configure_infrastructure
+         # requires:
+          #  - configure_infrastructure
             

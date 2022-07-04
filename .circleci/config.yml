@@ -89,7 +89,9 @@ workflows:
     jobs:
       - say-hello
       - create_infrastructure
-      - configure_infrastructure
+      - configure_infrastructure:
+          requires:
+            - create_infrastructure
       - smoke_test:
           requires:
             - configure_infrastructure

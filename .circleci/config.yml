@@ -47,22 +47,22 @@ jobs:
       #- run: return 1
       #- destroy_environment
 
-  #configure_infrastructure: 
-   # docker:
-    #  - image: python:3.7-alpine3.11
-    #steps:
-     # - checkout
-      #- add_ssh_keys:
-       #   fingerprints: ["34:84:22:7e:54:2c:dd:49:c3:03:75:d3:30:19:b2:f3"] # You can get this ID in the section where you registered the SSH Key
-      #- run:
-       #   name: Install dependencies
-        #  command: |
-         #   # install the dependencies needed for your playbook
-          #  apk add --update ansible 
-      #- run:
-       #   name: Configure server
-        #  command: |
-         #   ansible-playbook -i inventory main.yml
+  configure_infrastructure: 
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["34:84:22:7e:54:2c:dd:49:c3:03:75:d3:30:19:b2:f3"] # You can get this ID in the section where you registered the SSH Key
+      - run:
+          name: Install dependencies
+          command: |
+            # install the dependencies needed for your playbook
+            apk add --update ansible 
+      - run:
+          name: Configure server
+          command: |
+            ansible-playbook -i inventory main.yml
             
                        
   smoke_test:
@@ -91,10 +91,10 @@ workflows:
     jobs:
       #- say-hello
       #- create_infrastructure
-      #- configure_infrastructure:
+      #- configure_infrastructure
          # requires:
            # - create_infrastructure
-      - smoke_test:
+      - smoke_test
          # requires:
           #  - configure_infrastructure
             

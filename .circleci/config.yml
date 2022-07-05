@@ -145,33 +145,25 @@ jobs:
             aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
 
 workflows:
-  my_workflow:
+  my-cicd-workflow:
     jobs:
-      #- create_and_deploy_front_end
-      #- promote_to_production:
-       #   requires: 
-      #      - create_and_deploy_front_end
-      #- get_last_deployment_id:
-       #   requires:
-           # - create_and_deploy_front_end
-      - clean_up_old_front_end
-         # requires:
-         #   - get_last_deployment_id
-          #  - promote_to_production
-
-#workflows:
-#  say-hello-workflow:
- #   jobs:
-      #- say-hello
-      #- create_infrastructure
-      #- configure_infrastructure
-         # requires:
-           # - create_infrastructure
-      #- smoke_test
-         # requires:
-          #  - configure_infrastructure
-      #- create_and_deploy_front_end  
-      #- get_last_deployment_id
-      #- promote_to_production
-      #- clean_up_old_front_end
-       
+      - say-hello
+      - create_infrastructure
+      - configure_infrastructure:
+          requires:
+            - create_infrastructure
+      - smoke_test:
+          requires:
+            - configure_infrastructure
+      - create_and_deploy_front_end
+      - promote_to_production:
+          requires: 
+            - create_and_deploy_front_end
+      - get_last_deployment_id:
+          requires:
+            - create_and_deploy_front_end
+      - clean_up_old_front_end:
+          requires:
+            - get_last_deployment_id
+            - promote_to_production
+      
